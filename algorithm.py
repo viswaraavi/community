@@ -7,15 +7,29 @@ dict{v1:set(adjacency_list),......}
 
 graph={}
 
-def load_graph():
-    pass
 
-"""
-Returns a set of vertices
-"""
+f=open("amazon.graph.small")
+edges_list=text = f.readlines()
+for element in edges_list[1:]:
+    edge=element.strip()
+    edge=edge.split(" ")
+    edge[0]=tuple([int(edge[0])])
+    edge[1] = tuple([int(edge[1])])
+    if(edge[0] in graph):
+        graph[edge[0]].add(edge[1])
+    else:
+        graph[edge[0]]={edge[1]}
 
-def set_vertices():
-    pass
+    if (edge[1] in graph):
+        graph[edge[1]].add(edge[0])
+    else:
+        graph[edge[1]] = {edge[0]}
+
+
+
+
+
+
 
 """
 Returns the degree of vertices as dictionary
@@ -63,7 +77,7 @@ main function that would be called
 
 def algorithm():
     #T is set of vertices
-    T=set_vertices()
+    T=graph.keys()
     while(T):
         #partition function calculates all the nodes in graph with degree less than 0 or equal to 1
         p=partition()
