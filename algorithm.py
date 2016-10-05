@@ -11,8 +11,8 @@ edges_list = text = f.readlines()
 for element in edges_list[1:]:
     edge = element.strip()
     edge = edge.split(" ")
-    edge[0] = (int(edge[0]),)
-    edge[1] = (int(edge[1]),)
+    edge[0] = int(edge[0])
+    edge[1] = int(edge[1])
     if (graph.has_key(edge[0])):
         graph[edge[0]].add(edge[1])
     else:
