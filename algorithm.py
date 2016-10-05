@@ -120,6 +120,7 @@ def algorithm():
         u = select_vertex_min_degree(graph)
         v = compute_v(u)
         if (calculate_delta_qv(u, v) > 0):
+            membership[v]=membership[u]
             graph[u + v] = graph[u] - {v} | graph[v] - {u}
             del graph[u]
             del graph[v]
