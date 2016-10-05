@@ -4,6 +4,7 @@
 should take input files and should return graph in form
 dict{v1:set(adjacency_list),......}
 """
+from igraph import Graph
 
 graph={}
 
@@ -26,6 +27,10 @@ for element in edges_list[1:]:
         graph[edge[1]] = {edge[0]}
 
 
+g = Graph.TupleList([(k, v) for k, vs in graph.iteritems() for v in vs])
+membership=range(1,g.vcount()+1)
+print(g.modularity(membership))
+#print graph.keys
 
 
 
@@ -54,9 +59,10 @@ def select_vertex_min_degree():
     pass
 
 
-def calculate_delta_qv():
-    pass
-
+def calculate_delta_qv(u,v):
+    temp=membership
+    temp[v]=temp[u]
+    
 
 
 """
