@@ -4,15 +4,18 @@ should take input files and should return graph in form
 dict{v1:set(adjacency_list),......}
 """
 from igraph import EdgeSeq
-from igraph import Graph graph= {}
+from igraph import Graph
+import sys
 
+graph= {}
+mapping={}
 f = open("amazon.graph.small")
 edges_list = text = f.readlines()
 for element in edges_list[1:]:
     edge = element.strip()
     edge = edge.split(" ")
-    edge[0] = int(edge[0])
-    edge[1] = int(edge[1])
+    edge[0] = edge[0]
+    edge[1] = edge[1]
     if (graph.has_key(edge[0])):
         graph[edge[0]].add(edge[1])
     else:
@@ -23,18 +26,12 @@ for element in edges_list[1:]:
     else:
         graph[edge[1]] = {edge[0]}
 
-print graph[(0,)]
-g = Graph.TupleList([(k, v) for k, vs in graph.iteritems() for v in vs])
 
-# print g.es[g.vs[0]]
-# for e in g.vs.find(0):
-#    print e.tuple
+mapping["0"]=0
+for i in range(1,len(graph)):
+    mapping[str(i)]=i
+g= Graph(edges= [(mapping[v], mapping[a]) for v in graph.keys() for a in graph[v]])
 membership = range(1, g.vcount() + 1)
-
-print(g.modularity(membership))
-# print graph.keys
-
-
 
 
 
@@ -63,7 +60,6 @@ def partition(graph):
     for element in list:
         if (element[1] == 1):
             p.add(element[0])
-
     return p
 
 
@@ -93,8 +89,13 @@ v = arg max v 0 4Q uv 0 ;
 
 
 def compute_v(u):
-    pass
-
+    maximum=-(sys.maxint)
+    v=0
+    for vertex in graph[u]:
+        temp=calculate_delta_qv(u,vertex)
+        if(temp>maximum):
+            v=vertex
+    return v
 
 """
 main function that would be called
@@ -126,7 +127,6 @@ def algorithm():
             T = T | {u + v}
         else:
             T = T - {u}
-
 
 
 
