@@ -31,7 +31,8 @@ mapping["0"]=0
 for i in range(1,len(graph)):
     mapping[str(i)]=i
 g= Graph(edges= [(mapping[v], mapping[a]) for v in graph.keys() for a in graph[v]])
-membership = range(1, g.vcount() + 1)
+membership = range(0, g.vcount() )
+
 
 
 
@@ -55,15 +56,15 @@ Partition the vertices into p
 
 
 def partition(graph):
-    p = set()
-    list = degree(graph)
-    for element in list:
-        if (element[1] == 1):
+    p=set()
+    list1=degree(graph)
+    for element in list1:
+        if(element[1]==1):
             p.add(element[0])
+
     return p
 
 
-print partition(graph)
 
 """
 takes input as graph
@@ -72,14 +73,19 @@ select min degree vertex
 
 
 def select_vertex_min_degree(graph):
-    list = degree(graph)
-    return list[0][0]
+    list1 = degree(graph)
+    return list1[0][0]
+
+
+
+
 
 
 def calculate_delta_qv(u, v):
     temp = membership
-    temp[v] = temp[u]
+    temp[int(v)] = temp[int(u)]
     return g.modularity(temp)
+
 
 
 """
@@ -91,70 +97,64 @@ v = arg max v 0 4Q uv 0 ;
 def compute_v(u):
     maximum=-(sys.maxint)
     v=0
+    
     for vertex in graph[u]:
         temp=calculate_delta_qv(u,vertex)
         if(temp>maximum):
             v=vertex
-    return v
+        return v
+
 
 """
 main function that would be called
 """
 
+list1=[]
 
 def algorithm():
     # T is set of vertices
     T = set(graph.keys())
     while (T):
         # partition function calculates all the nodes in graph with degree less than 0 or equal to 1
-        p = partition(graph)
+        p=partition(graph)
         for element in p:
-            new_vertex = graph[element][0]
-            edge_list = graph[new_vertex]
-            edge_list.remove(element)
             T = T - {element}
-            graph[element + new_vertex] = edge_list
+            if(graph[element]):
+                new_vertex=list(graph[element])[0]
+                if(new_vertex in graph):
+                    graph[new_vertex] = graph[new_vertex] - {element}
+            membership[int(element)] = membership[int(new_vertex)]
+            g.contract_vertices(membership)
             del graph[element]
-            del graph[new_vertex]
 
-        u = select_vertex_min_degree(graph)
+           
+        u = str(select_vertex_min_degree(graph))
+        list1.append(u)
         v = compute_v(u)
         if (calculate_delta_qv(u, v) > 0):
-            membership[v]=membership[u]
-            graph[u + v] = graph[u] - {v} | graph[v] - {u}
-            del graph[u]
-            del graph[v]
+            membership[int(v)]=membership[int(u)]
+            g.contract_vertices(membership)
             T = T - {u, v}
-            T = T | {u + v}
+            for element in graph[u]:
+                if (element in graph):
+                    graph[element]=graph[element]-{u}
+            if(v in graph):
+                graph[v]=graph[v] | graph[u]-{v}
+            del graph[u]
+
+
         else:
             T = T - {u}
+            del graph[u]
 
+        
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+algorithm()
+index=0
+for element in set(membership):
+    print "community"+str(index)
+    indices = [i for i, x in enumerate(membership) if x == element]
+    print indices
+    index=index+1
 
 
