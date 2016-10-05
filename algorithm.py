@@ -1,14 +1,18 @@
 
-
-graph = {}
+"""
+should take input files and should return graph in form
+dict{v1:set(adjacency_list),......}
+"""
+from igraph import EdgeSeq
+from igraph import Graph graph= {}
 
 f = open("amazon.graph.small")
 edges_list = text = f.readlines()
 for element in edges_list[1:]:
     edge = element.strip()
     edge = edge.split(" ")
-    edge[0] = int(edge[0])
-    edge[1] = int(edge[1])
+    edge[0] = (int(edge[0]),)
+    edge[1] = (int(edge[1]),)
     if (graph.has_key(edge[0])):
         graph[edge[0]].add(edge[1])
     else:
@@ -19,11 +23,15 @@ for element in edges_list[1:]:
     else:
         graph[edge[1]] = {edge[0]}
 
-print graph
+print graph[(0,)]
+g = Graph.TupleList([(k, v) for k, vs in graph.iteritems() for v in vs])
 
-#g = Graph.TupleList([(k, v) for k, vs in graph.iteritems() for v in vs])
-#membership = range(1, g.vcount() + 1)
-#print(g.modularity(membership))
+# print g.es[g.vs[0]]
+# for e in g.vs.find(0):
+#    print e.tuple
+membership = range(1, g.vcount() + 1)
+
+print(g.modularity(membership))
 # print graph.keys
 
 
@@ -75,6 +83,7 @@ def select_vertex_min_degree(graph):
 def calculate_delta_qv(u, v):
     temp = membership
     temp[v] = temp[u]
+    return g.modularity(temp)
 
 
 """
@@ -83,7 +92,7 @@ v = arg max v 0 4Q uv 0 ;
 """
 
 
-def compute_v():
+def compute_v(u):
     pass
 
 
@@ -117,5 +126,34 @@ def algorithm():
             T = T | {u + v}
         else:
             T = T - {u}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
